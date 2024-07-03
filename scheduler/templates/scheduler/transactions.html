@@ -1,0 +1,44 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+Транзакции
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" href="{% static 'scheduler/css/styles.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="title">Транзакции</h1>
+    <h3 class="title">{{ student.name }}</h3>
+    <div>Баланс счета: {{ student.balance }}</div>
+    <a class="button" href="{% url 'add_transaction' student_id=student.pk %}">Пополнение счета</a>
+
+    <table class="table is-hoverable is-bordered">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            {% if transaction.lesson %}
+            <tr>
+            {% else %}
+            <tr class='clickable-row' data-href="{% url 'update_transaction' transaction_id=transaction.id %}">
+            {% endif %}
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scheduler/js/scheduler_scripts.js' %}"></script>
+{% endblock %}

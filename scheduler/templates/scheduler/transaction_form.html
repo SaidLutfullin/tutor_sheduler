@@ -1,0 +1,18 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+Пополнение счета
+{% endblock %}
+
+{% block body%}
+<div class="container mt-5">
+    <h1 class="title">Пополнение счета</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button type="submit" class="button">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

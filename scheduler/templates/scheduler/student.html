@@ -1,0 +1,45 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+{{ student.name }}
+{% endblock %}
+
+{% block styles %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="card">
+        <div class="card-content">
+        <h2 class="title">
+          {{ student.name }}
+        </h2>
+        <h4 class="title is-4">{{ student.city }} {{ student.time_zone }}</h4>
+        <h5 class="title is-4">{{ student.phone }}</h5>
+        <div>Баланс счета: {{ student.balance }}</div>
+        <a class="button is-success is-outlined" href="{% url 'transactions' student_id=student.id %}">
+            Транзакции
+        </a>
+        <div class="card-content">
+            {% autoescape off %}
+            {{student.additional_information}}
+            {% endautoescape %}
+        </div>
+        <a class="button" href="{% url 'update_student' student_id=student.id %}">
+            Редактировать
+        </a>
+        <a class="button is-danger is-outlined" href="{% url 'student_delete' student_id=student.id %}">
+            Удалить
+        </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

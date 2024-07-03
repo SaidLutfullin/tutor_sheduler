@@ -1,0 +1,44 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+Мои студенты
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" href="{% static 'scheduler/css/styles.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="title">Мои студенты</h1>
+    <a class="button" href="{% url 'new_student' %}">Добавить студента</a>
+
+    <table class="table is-hoverable is-bordered">
+        <thead>
+            <tr>
+                <th>Студент</th>
+                <th>Баланс</th>
+                <th>Город</th>
+                <th>Телефон</th>
+                <th>Временная зона</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr {% if student.balance < 0 %} class='clickable-row is-danger' {% else %} class='clickable-row' {% endif %} data-href="{% url 'student' student_id=student.id %}">
+                <td>{{ student.name }}</td>
+                <td>{{ student.balance }}</td>
+                <td>{{ student.city }}</td>
+                <td>{{ student.phone }}</td>
+                <td>{{ student.time_zone }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scheduler/js/scheduler_scripts.js' %}"></script>
+{% endblock %}

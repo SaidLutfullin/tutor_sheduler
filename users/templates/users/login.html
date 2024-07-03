@@ -1,0 +1,21 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+Войти
+{% endblock %}
+
+{% block body%}
+<div class="container mt-5" >
+    <div class="ml-5">
+        <h1 class="title">Войти</h1>
+        <div style="width: 300px;">
+          <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button is-light">Войти</button>
+          </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

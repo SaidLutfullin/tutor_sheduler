@@ -1,0 +1,17 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title%}
+Студент
+{% endblock %}
+
+{% block body%}
+<div class="container mt-5">
+    <h1 class="title">Мой профиль</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

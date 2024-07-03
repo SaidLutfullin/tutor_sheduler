@@ -1,0 +1,17 @@
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+table td, table th {
+    padding: 10px;
+    min-width: 100px;
+    border: 1px solid grey;
+    word-break: break-word;
+}
+
+td:hover {
+    cursor: pointer;
+}

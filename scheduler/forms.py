@@ -17,7 +17,14 @@ class SubjectForm(ModelForm):
 
     class Meta:
         model = Student
-        fields = ('name', 'is_active', 'city', 'phone', 'time_zone', 'additional_information', 'subjects')
+        fields = ('name',
+                  'is_active',
+                  'city',
+                  'phone',
+                  'time_zone',
+                  'additional_information',
+                  'subjects',
+        )
         widgets = {
             'name': forms.TextInput(attrs={'class': 'input'}),
             'city': forms.TextInput(attrs={'class': 'input'}),

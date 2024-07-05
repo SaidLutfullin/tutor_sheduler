@@ -1,3 +1,4 @@
+import pytz
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django import forms
 
@@ -48,6 +49,12 @@ class RegisterUserForm(UserCreationForm):
         fields = ("username", "first_name", "password1", "password2")
 
 
+class AlphabeticalTimezoneSelect(forms.Select):
+    def __init__(self, attrs=None, choices=(), *args, **kwargs):
+        sorted_choices = sorted(choices, key=lambda x: x[1])
+        super().__init__(attrs, sorted_choices, *args, **kwargs)
+
+
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
@@ -55,21 +62,21 @@ class CustomUserChangeForm(UserChangeForm):
             "first_name",
             "username",
             "time_zone",
-            "is_tutor"
-
+            "is_tutor",
         )
         widgets = {
             "first_name": forms.TextInput(attrs={"class": "input my-1"}),
             "is_tutor": forms.CheckboxInput(attrs={"class": "form-control my-1"}),
-            "time_zone": forms.Select(attrs={"class": "select my-1"}),
             "username": forms.TextInput(attrs={"class": "input my-1"}),
         }
         labels = {
             "first_name": "Имя",
-            "time_zone": "Временная зона",
             "is_tutor": "Вы репетитор?",
             "username": "Логин"
         }
+
+    time_zone_choices = [(tz, tz) for tz in sorted(pytz.all_timezones)]
+    time_zone = forms.ChoiceField(choices=time_zone_choices, widget=forms.Select(attrs={'class': 'select my-1'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

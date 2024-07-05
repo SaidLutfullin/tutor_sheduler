@@ -60,6 +60,10 @@ class Lesson(models.Model):
         ).exclude(pk=self.pk).exists():
             raise ValidationError('Time slots overlap with other recordings.')
 
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         with transaction.atomic():
             if hasattr(self, 'transaction'):

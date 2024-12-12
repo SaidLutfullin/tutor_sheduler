@@ -1,3 +1,5 @@
+import zoneinfo
+
 import pytz
 from django.forms import ModelForm
 from django import forms
@@ -5,7 +7,7 @@ from scheduler.models import Student, Transaction
 from tinymce.widgets import TinyMCE
 
 from django.db import transaction
-
+from loguru import logger
 
 class AlphabeticalTimezoneSelect(forms.Select):
     def __init__(self, attrs=None, choices=(), *args, **kwargs):
@@ -46,7 +48,7 @@ class SubjectForm(ModelForm):
     time_zone_choices = [(tz, tz) for tz in sorted(pytz.all_timezones)]
     time_zone = forms.ChoiceField(choices=time_zone_choices, widget=forms.Select(attrs={'class': 'select'}))
 
-
+from zoneinfo import ZoneInfo
 class TransactionForm(ModelForm):
     def update_account(self):
         with transaction.atomic():
@@ -58,6 +60,23 @@ class TransactionForm(ModelForm):
             object = super().save()
             object.change_student_balance(-previous_amount)
             return object
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.date:
+            user_timezone = self.instance.student.tutor.time_zone
+            local_date = self.instance.date.astimezone(user_timezone)
+            self.initial['date'] = local_date.strftime('%Y-%m-%dT%H:%M')
+
+    def clean_date(self):
+        date = self.cleaned_data['date']
+        user_timezone = self.instance.student.tutor.time_zone
+
+        aware_date = date.replace(tzinfo=user_timezone)
+        utc_time = aware_date.astimezone(zoneinfo.ZoneInfo("UTC"))
+
+        return utc_time.replace(tzinfo=None)
 
     class Meta:
         model = Transaction

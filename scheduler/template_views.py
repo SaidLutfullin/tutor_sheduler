@@ -1,4 +1,3 @@
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
@@ -11,6 +10,7 @@ from scheduler.models import Student, Transaction
 
 from django.middleware.csrf import get_token
 from loguru import logger
+import pytz
 
 class StudentsListView(TeacherRequiredMixin, ListView):
     model = Student
@@ -107,7 +107,10 @@ class TransactionsListView(TeacherRequiredMixin, ListView):
 class TransactionCreateView(TeacherRequiredMixin, CreateView):
     form_class = TransactionForm
     template_name = 'scheduler/transaction_form.html'
-    # success_url = reverse_lazy('students')
+
+    def get_success_url(self):
+        student_id = self.kwargs.get('student_id')
+        return reverse_lazy('transactions', kwargs={'student_id': student_id})
 
     def form_valid(self, form):
         form.instance.student = Student.objects.get(id=self.kwargs.get('student_id'))
@@ -128,8 +131,10 @@ class TransactionUpdateView(TeacherRequiredMixin, UpdateView):
         self.previous_amount = object.amount
         return object
 
-    def form_valid(self, form):
+    def get_success_url(self):
+        student_id = self.object.student.id
+        return reverse_lazy('transactions', kwargs={'student_id': student_id})
 
-        logger.error(self.previous_amount)
+    def form_valid(self, form):
         self.object = form.update_transaction(previous_amount=self.previous_amount)
         return HttpResponseRedirect(self.get_success_url())

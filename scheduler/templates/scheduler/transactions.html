@@ -1,6 +1,6 @@
 {% extends 'common/base.html' %}
 {% load static %}
-
+{% load tz %}
 {% block title%}
 Транзакции
 {% endblock %}
@@ -30,7 +30,7 @@
             {% else %}
             <tr class='clickable-row' data-href="{% url 'update_transaction' transaction_id=transaction.id %}">
             {% endif %}
-                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.date|timezone:user.time_zone }}</td>
                 <td>{{ transaction.amount }}</td>
             </tr>
             {% endfor %}

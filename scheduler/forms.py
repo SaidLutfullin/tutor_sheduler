@@ -69,13 +69,21 @@ class TransactionForm(ModelForm):
             local_date = self.instance.date.astimezone(user_timezone)
             self.initial['date'] = local_date.strftime('%Y-%m-%dT%H:%M')
 
+    # def clean_date(self):
+    #     date = self.cleaned_data['date']
+    #     user_timezone = self.instance.student.tutor.time_zone
+    #
+    #     aware_date = date.replace(tzinfo=user_timezone)
+    #     utc_time = aware_date.astimezone(zoneinfo.ZoneInfo("UTC"))
+    #
+    #     return utc_time.replace(tzinfo=None)
     def clean_date(self):
         date = self.cleaned_data['date']
         user_timezone = self.instance.student.tutor.time_zone
 
         aware_date = date.replace(tzinfo=user_timezone)
-        utc_time = aware_date.astimezone(zoneinfo.ZoneInfo("UTC"))
 
+        utc_time = aware_date.astimezone(zoneinfo.ZoneInfo("UTC"))
         return utc_time.replace(tzinfo=None)
 
     class Meta:
